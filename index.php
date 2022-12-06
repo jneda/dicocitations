@@ -11,14 +11,21 @@ try {
   //var_dump(get_object_vars($dbConfig->database));
   extract(get_object_vars($dbConfig->database));
 
-  $connection = new PDO('mysql:host=' . $host . ';dbname=' . $dbname, $login, $password);
+  $connection = new PDO(
+    'mysql:host=' . $host . ';dbname=' . $dbname,
+    $login,
+    $password
+  );
   $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   //echo 'Connection established';  
 
   // get a random quote
 
   // get quotes count
-  $statement = $connection->prepare('SELECT * FROM quote INNER JOIN author ON author.id = quote.authorId');
+  $statement = $connection->prepare('
+    SELECT * FROM quote
+    INNER JOIN author ON author.id = quote.authorId'
+  );
   $statement->execute();
   $result = $statement->fetchAll();
 
@@ -27,14 +34,18 @@ try {
   include('./includes/quote.php');
 
   // get all distinct author names
-  $statement = $connection->prepare('SELECT DISTINCT id, lastName, firstName FROM author ORDER BY lastName');
+  $statement = $connection->prepare('
+    SELECT DISTINCT id, lastName, firstName FROM author ORDER BY lastName'
+  );
   $statement->execute();
   $authors = $statement->fetchAll();
 
   //var_dump($authors);
 
   // get all distinct centuries
-  $statement = $connection->prepare('SELECT DISTINCT century FROM author ORDER BY century');
+  $statement = $connection->prepare('
+    SELECT DISTINCT century FROM author ORDER BY century'
+  );
   $statement->execute();
   $centuries = $statement->fetchAll();
 

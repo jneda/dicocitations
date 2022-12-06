@@ -13,13 +13,17 @@ try {
   //var_dump(get_object_vars($dbConfig->database));
   extract(get_object_vars($dbConfig->database));
 
-  $connection = new PDO('mysql:host=' . $host . ';dbname=' . $dbname, $login, $password);
+  $connection = new PDO(
+    'mysql:host=' . $host . ';dbname=' . $dbname, $login, $password
+  );
   $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   //echo 'Connection established';
 
   extract($_POST);
 
-  $sql = 'SELECT text, lastName, firstName, century FROM quote INNER JOIN author ON quote.authorId = author.id';
+  $sql = '
+    SELECT text, lastName, firstName, century FROM quote
+    INNER JOIN author ON quote.authorId = author.id';
 
   // handle query string
 

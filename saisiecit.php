@@ -33,13 +33,19 @@ if (isset($_POST) && !empty($_POST)) {
     //var_dump(get_object_vars($dbConfig->database));
     extract(get_object_vars($dbConfig->database));
     
-    $connection = new PDO('mysql:host=' . $host . ';dbname=' . $dbname, $login, $password);
+    $connection = new PDO(
+      'mysql:host=' . $host . ';dbname=' . $dbname,
+      $login,
+      $password
+    );
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     //echo 'Connection established';
 
     // search for author in database
     extract($_POST);
-    $statement = $connection->prepare('SELECT * FROM author WHERE lastName=? AND firstName=?');
+    $statement = $connection->prepare('
+      SELECT * FROM author WHERE lastName=? AND firstName=?'
+    );
     $statement->execute([$lastName, $firstName]);
 
     // show result
@@ -52,7 +58,9 @@ if (isset($_POST) && !empty($_POST)) {
       //echo 'Auteur inconnu - ';      
 
       // add author to database
-      $statement = $connection->prepare('INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)');
+      $statement = $connection->prepare('
+        INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)'
+      );
       $statement->execute([$lastName, $firstName, $century]);
 
       $lastInsertId = $connection->lastInsertId();
@@ -78,7 +86,9 @@ if (isset($_POST) && !empty($_POST)) {
       echo 'Cette citation existe déjà<br/>';
     } else {
       // add quote to database
-      $statement = $connection->prepare('INSERT INTO quote (text, authorId) VALUES (?, ?)');
+      $statement = $connection->prepare('
+        INSERT INTO quote (text, authorId) VALUES (?, ?)'
+      );
       $statement->execute([$quoteText, $authorId]);
 
       if ($connection->lastInsertId()) {
