@@ -30,6 +30,19 @@ try {
   if ($q !== '') {
     $sql .= '  WHERE text LIKE "%' . $q . '%"';
   }
+  
+  if ($q !== '') {
+    $sql .= ' AND';
+  } else {
+    $sql .= ' WHERE';
+  }
+  if (isset($author) && isset($century)) {
+    $sql .= ' author.id = ' . $author . ' AND century = ' . $century;
+  } else if (isset($author)) {
+    $sql .= ' author.id = ' . $author;
+  } else if (isset($century)) {
+    $sql .= ' century = ' . $century;
+  }  
 
   // assign sort by author as default
   if (!isset($sortBy) || $sortBy === 'author') {
@@ -37,23 +50,16 @@ try {
   }
 
   // var_dump($sortBy);
-  if (isset($author) && isset($century)) {
-    $sql .= ' author.id = ' . $author . ' AND century = ' . $century;
-  } else if (isset($author)) {
-    $sql .= ' author.id = ' . $author;
-  } else if (isset($century)) {
-    $sql .= ' century = ' . $century;
-  }
   $sql .=  ' ORDER BY ' . $sortBy;
 
-  //var_dump($sql);
+  // var_dump($sql);
 
   $statement = $connection->prepare($sql);
   $statement->execute();
 
   $quotes = $statement->fetchAll();
 
-  //var_dump($quotes);
+  // var_dump($quotes);
 
   // close connection
   $connection = null;
