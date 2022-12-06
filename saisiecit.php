@@ -1,6 +1,6 @@
 <?php
 
-include './includes/header.php';
+include './includes/header.html';
 
 include './includes/addQuoteForm.php';
 
@@ -86,4 +86,4 @@ if (isset($_POST) && !empty($_POST)) {
   }
 }
 
-include './includes/footer.php';
+include './includes/footer.html';

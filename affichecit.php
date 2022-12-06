@@ -1,6 +1,6 @@
 <?php
 
-include './includes/header.php';
+include './includes/header.html';
 
 //var_dump($_POST);
 
@@ -68,4 +68,4 @@ include './includes/quoteTable.php';
 <a href="saisiecit.php">Ajouter une citation</a>
 
 <?php
-include './includes/footer.php';
+include './includes/footer.html';

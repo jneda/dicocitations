@@ -1,6 +1,6 @@
 <?php
 
-include './includes/header.php';
+include './includes/header.html';
 
 // establish connection
 $connection = null;
@@ -59,4 +59,4 @@ try {
 
 include './includes/searchQuoteForm.php';
 
-include './includes/footer.php';
+include './includes/footer.html';
