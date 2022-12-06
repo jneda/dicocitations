@@ -1,4 +1,4 @@
-<table>
+<table class="table table-striped table-responsive">
   <thead>
     <th>Citation</th>
     <th>Auteur</th>
