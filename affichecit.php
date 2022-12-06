@@ -25,7 +25,7 @@ try {
   }
 
   // assign sort by author as default
-  if (!isset( $sortBy) || $sortBy === 'author') {
+  if (!isset($sortBy) || $sortBy === 'author') {
     $sortBy = 'author.lastName, author.firstName';
   }
 
@@ -41,10 +41,12 @@ try {
   }
   $sql .=  ' ORDER BY ' . $sortBy;
 
-  $statement = $connection->prepare($sql);  
+  $statement = $connection->prepare($sql);
   $statement->execute();
 
-  var_dump($statement->fetchAll());
+  $quotes = $statement->fetchAll();
+
+  // var_dump($quotes);
 
   // close connection
   $connection = null;
@@ -52,4 +54,11 @@ try {
   echo 'Connection failed: ' . $e->getMessage();
 }
 
+include './includes/quoteTable.php';
+
+?>
+<a href="index.php">Accueil</a>
+<a href="saisiecit.php">Ajouter une citation</a>
+
+<?php
 include './includes/footer.php';
