@@ -2,7 +2,7 @@
 
 include './includes/header.php';
 
-var_dump($_POST);
+//var_dump($_POST);
 
 // establish connection
 $connection = null;
@@ -19,9 +19,12 @@ try {
 
   extract($_POST);
 
+  $sql = 'SELECT text, lastName, firstName, century FROM quote INNER JOIN author ON quote.authorId = author.id';
+
   // handle query string
-  if ($q === '') {
-    $q = '*';
+
+  if ($q !== '') {
+    $sql .= '  WHERE text LIKE "%' . $q . '%"';
   }
 
   // assign sort by author as default
@@ -29,24 +32,24 @@ try {
     $sortBy = 'author.lastName, author.firstName';
   }
 
-  var_dump($sortBy);
-
-  $sql = 'SELECT text, lastName, firstName, century FROM quote INNER JOIN author ON quote.authorId = author.id';
+  // var_dump($sortBy);
   if (isset($author) && isset($century)) {
-    $sql .= ' WHERE author.id = ' . $author . ' AND century = ' . $century;
+    $sql .= ' author.id = ' . $author . ' AND century = ' . $century;
   } else if (isset($author)) {
-    $sql .= ' WHERE author.id = ' . $author;
+    $sql .= ' author.id = ' . $author;
   } else if (isset($century)) {
-    $sql .= ' WHERE century = ' . $century;
+    $sql .= ' century = ' . $century;
   }
   $sql .=  ' ORDER BY ' . $sortBy;
+
+  //var_dump($sql);
 
   $statement = $connection->prepare($sql);
   $statement->execute();
 
   $quotes = $statement->fetchAll();
 
-  // var_dump($quotes);
+  //var_dump($quotes);
 
   // close connection
   $connection = null;
