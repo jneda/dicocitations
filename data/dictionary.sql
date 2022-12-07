@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 07 déc. 2022 à 15:04
+-- Généré le : mer. 07 déc. 2022 à 15:47
 -- Version du serveur : 5.7.36
 -- Version de PHP : 8.1.0
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `author` (
   PRIMARY KEY (`id`),
   KEY `idx_nom` (`lastName`) USING BTREE,
   KEY `idx_siecle` (`century`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `author`
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `author` (
 INSERT INTO `author` (`id`, `lastName`, `firstName`, `century`) VALUES
 (1, 'Totovitch Totov', 'Toto', 19),
 (2, 'Houlala', 'Anthony', 21),
-(3, 'Socrate', 'Socrate', -5),
+(3, '', 'Socrate', -5),
 (4, 'Socrate', 'Jean-Patrick', 21),
 (5, 'Denard', 'Bob', 20),
 (6, 'Camus', 'Serge-Henri', 20),
@@ -53,7 +53,8 @@ INSERT INTO `author` (`id`, `lastName`, `firstName`, `century`) VALUES
 (8, 'Random', '', 19),
 (9, '', 'Gustave', 18),
 (10, 'Raminagrobis', 'HerculÃ©on', 12),
-(11, 'Delagarde', 'Louison', 21);
+(11, 'Delagarde', 'Louison', 21),
+(12, 'Camus', 'Serge-Henri', 20);
 
 -- --------------------------------------------------------
 
@@ -68,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `quote` (
   `authorId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `authorIdIdx` (`authorId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `quote`
@@ -97,7 +98,12 @@ INSERT INTO `quote` (`id`, `text`, `authorId`) VALUES
 (21, 'En cest estat passa iusques Ã  vn an & dix moys : onquel temps par le conseil des medecins on commenÃ§a le porter : & fut faicte vne belle charrette Ã  bÅ“ufs par l\'inuention de Iehan Denyau.', 7),
 (24, 'Vous sers-je en riz ?', 6),
 (25, 'Youpi banane !', 1),
-(26, 'C\'est bien de se lancer des fleurs.', 11);
+(26, 'C\'est bien de se lancer des fleurs.', 11),
+(27, 'Tout Ã©couteur vit aux dÃ©pends de celui qui le flatte.', 1),
+(28, 'Le couscous, c\'est trÃ¨s surfait.', 12),
+(30, 'Ziva, tu t\'es cru chez mÃ©mÃ© ou ?!', 3),
+(31, 'Ami, vous noterez que par le monde y a beaucoup plus de couillons que d\'hommes, et de ce vous souvienne.', 7),
+(32, 'Le tajine Ã§a dÃ©chire.', 6);
 
 --
 -- Contraintes pour les tables déchargées
