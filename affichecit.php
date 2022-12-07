@@ -14,7 +14,9 @@ try {
   extract(get_object_vars($dbConfig->database));
 
   $connection = new PDO(
-    'mysql:host=' . $host . ';dbname=' . $dbname, $login, $password
+    'mysql:host=' . $host . ';dbname=' . $dbname,
+    $login,
+    $password
   );
   $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   //echo 'Connection established';
@@ -75,8 +77,16 @@ if (count($quotes) === 0) {
 }
 
 ?>
-<a href="index.php">Accueil</a>
-<a href="saisiecit.php">Ajouter une citation</a>
+
+<div class="container">
+  <nav>
+    <div class="list-group">
+      <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
+      <a href="saisiecit.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
+    </div>
+  </nav>
+</div>
+
 
 <?php
 include './includes/footer.html';
