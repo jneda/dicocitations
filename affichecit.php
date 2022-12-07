@@ -1,6 +1,6 @@
 <?php
 
-include './templates/header.html';
+require('./templates/header.html');
 
 function getConnection()
 {

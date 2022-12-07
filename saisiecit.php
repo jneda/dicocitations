@@ -1,8 +1,8 @@
 <?php
 
-include './templates/header.html';
-include './templates/addQuoteForm.php';
-include './templates/footer.html';
+require('./templates/header.html');
+require('./templates/addQuoteForm.php');
+require('./templates/footer.html');
 
 function getConnection()
 {
