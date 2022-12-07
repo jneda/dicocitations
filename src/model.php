@@ -84,3 +84,81 @@ function getIndexData()
 
   return $indexData;
 }
+
+function getAuthorId($authorNames)
+{
+  // search for author in database
+
+  $connection = getConnection();
+
+  $statement = $connection->prepare('
+    SELECT * FROM author WHERE lastName=? AND firstName=?
+  ');
+  $statement->execute($authorNames);
+  $result = $statement->fetchAll();
+
+  $connection = null;
+
+  $authorId = null;
+  if (!empty($result)) {
+    $authorId = $result[0]['id'];
+  }
+
+  return $authorId;
+}
+
+function insertAuthor($authorData)
+{
+  // add author to database
+
+  $connection = getConnection();
+
+  $statement = $connection->prepare('
+    INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)
+  ');
+  $statement->execute($authorData);
+
+  $lastInsertId = $connection->lastInsertId();
+
+  $connection = null;
+
+  if ($lastInsertId) {
+    echo 'Auteur ajouté à la base de données<br/>';
+    return $lastInsertId;
+  } else {
+    die("Failed to insert author into database");
+  }
+}
+
+function quoteExists($quoteText)
+{
+  // search for quote in database
+
+  $connection = getConnection();
+
+  $statement = $connection->prepare('SELECT * FROM quote WHERE text=?');
+  $statement->execute([$quoteText]);
+  $result = $statement->fetchAll();
+
+  $connection = null;
+
+  return !empty($result);
+}
+
+function insertQuote($quoteText, $authorId)
+{
+  // add quote to database
+
+  $connection = getConnection();
+
+  $statement = $connection->prepare('
+    INSERT INTO quote (text, authorId) VALUES (?, ?)
+  ');
+  $statement->execute([$quoteText, $authorId]);
+
+  if ($connection->lastInsertId()) {
+    echo '<br/>Citation ajoutée à la base de données<br/>';
+  }
+
+  $connection = null;
+}
