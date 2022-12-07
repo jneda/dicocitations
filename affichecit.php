@@ -78,14 +78,12 @@ if (count($quotes) === 0) {
 
 ?>
 
-<div class="container">
-  <nav>
-    <div class="list-group">
-      <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
-      <a href="saisiecit.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
-    </div>
-  </nav>
-</div>
+<nav>
+  <div class="list-group">
+    <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
+    <a href="saisiecit.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
+  </div>
+</nav>
 
 
 <?php
