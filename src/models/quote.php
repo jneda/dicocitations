@@ -9,79 +9,97 @@ class Quote
   public int $century;
 }
 
-
-function getQuotes(string $sql): array
+class QuoteRepository
 {
-  $connection = getConnection();
+  public ?PDO $database = null;
 
-  $statement = $connection->prepare($sql);
-  $statement->execute();
+  public function getQuotes(string $sql): array
+  {
+    $this->dbConnect();
 
-  $quotes = [];
-  while ($row = $statement->fetch()) {
-    $quote = new Quote();
-    $quote->text = $row['text'];
-    $quote->authorName = $row['lastName'] . ' ' . $row['firstName'];
-    $quote->century = $row['century'];
-    $quotes[] = $quote;
+    $statement = $this->database->prepare($sql);
+    $statement->execute();
+
+    $quotes = [];
+    while ($row = $statement->fetch()) {
+      $quote = new Quote();
+      $quote->text = $row['text'];
+      $quote->authorName = $row['lastName']
+        . ' ' . $row['firstName'];
+      $quote->century = $row['century'];
+      $quotes[] = $quote;
+    }
+
+    return $quotes;
   }
 
-  $connection = null;
-  
-  return $quotes;
-}
+  public function getRandomQuote(): Quote
+  {
+    // get a random quote
 
-function getRandomQuote(): Quote
-{
-  // get a random quote
+    $sql = '
+      SELECT * FROM quote
+      INNER JOIN author ON author.id = quote.authorId
+    ';
 
-  $sql = '
-    SELECT * FROM quote
-    INNER JOIN author ON author.id = quote.authorId
-  ';
+    $quotes = $this->getQuotes($sql);
 
-  $quotes = getQuotes($sql);
-
-  return $quotes[rand(0, count($quotes) - 1)];
-}
-
-function quoteExists(string $quoteText): bool
-{
-  // search for quote in database
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('SELECT * FROM quote WHERE text=?');
-  $statement->execute([$quoteText]);
-  $result = $statement->fetchAll();
-
-  $connection = null;
-
-  return !empty($result);
-}
-
-function insertQuote(string $quoteText, int $authorId): bool
-{
-  // add quote to database
-
-  $connection = getConnection();
-
-  if ($quoteText === '') {
-    throw new Exception('Texte de la citation manquant.');
+    return $quotes[rand(0, count($quotes) - 1)];
   }
 
-  $statement = $connection->prepare('
+  public function quoteExists(string $quoteText): bool
+  {
+    // search for quote in database
+
+    $this->dbConnect();
+
+    $statement = $this->database->prepare('SELECT * FROM quote WHERE text=?');
+    $statement->execute([$quoteText]);
+    $result = $statement->fetchAll();
+
+    return !empty($result);
+  }
+
+  public function insertQuote(string $quoteText, int $authorId): bool
+  {
+    // add quote to database
+
+    if ($quoteText === '') {
+      throw new Exception('Texte de la citation manquant.');
+    }
+
+    $this->dbConnect();
+
+    $statement = $this->database->prepare('
     INSERT INTO quote (text, authorId) VALUES (?, ?)
   ');
-  $statement->execute([$quoteText, $authorId]);
+    $statement->execute([$quoteText, $authorId]);
 
-  if ($connection->lastInsertId()) {
-    $ok = true;
-  } else {
-    $ok = false;
+    if ($this->database->lastInsertId()) {
+      $ok = true;
+    } else {
+      $ok = false;
+    }
+
+    return $ok;
   }
 
-  $connection = null;
+  public function dbConnect(): void
+  {
+    // establish connection
+    if ($this->database === null) {
+      // get database config
+      $dbConfigFile = file_get_contents('./config/config.json');
+      $dbConfig = json_decode($dbConfigFile);
 
-  return $ok;
+      extract(get_object_vars($dbConfig->database));
+
+      $this->database = new PDO(
+        'mysql:host=' . $host . ';dbname=' . $dbname,
+        $login,
+        $password
+      );
+      $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+  }
 }

@@ -59,7 +59,7 @@ function getCenturies(): array
   return $statement->fetchAll();
 }
 
-function getAuthorId(array $authorNames): int
+function getAuthorId(array $authorNames): ?int
 {
   // search for author in database
 

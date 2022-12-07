@@ -1,6 +1,7 @@
 <?php
 
 require_once('src/model.php');
+require_once('src/models/quote.php');
 
 function addQuote()
 {
@@ -14,10 +15,12 @@ function addQuote()
       $authorId = insertAuthor([$lastName, $firstName, $century]);
     }
 
-    if (quoteExists($quoteText)) {
+    $quoteRepository = new QuoteRepository();
+
+    if ($quoteRepository->quoteExists($quoteText)) {
       throw new Exception('Cette citation existe déjà.');
     } else {
-      $ok = insertQuote($quoteText, $authorId);
+      $ok = $quoteRepository->insertQuote($quoteText, $authorId);
       if ($ok) {
         $successMessage = 'Citation ajoutée à la base de données';
         require('templates/success.php');

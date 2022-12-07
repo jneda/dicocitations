@@ -25,8 +25,9 @@ function getConnection()
 
 function getIndexData()
 {
+  $quoteRepository = new QuoteRepository();
   $indexData = [];
-  $indexData['randomQuote'] = getRandomQuote();
+  $indexData['randomQuote'] = $quoteRepository->getRandomQuote();
   $indexData['authors'] = getAuthors();
   $indexData['centuries'] = getCenturies();
 
