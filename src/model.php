@@ -1,5 +1,7 @@
 <?php
 
+require_once('src/models/author.php');
+require_once('src/models/quote.php');
 
 function getConnection()
 {
@@ -24,57 +26,6 @@ function getConnection()
   }
 }
 
-function getRandomQuote()
-{
-  // get a random quote
-
-  $connection = getConnection();
-
-  // get quotes count
-  $statement = $connection->prepare('
-    SELECT * FROM quote
-    INNER JOIN author ON author.id = quote.authorId
-  ');
-  $statement->execute();
-  $result = $statement->fetchAll();
-
-  $connection = null;
-
-  return $result[rand(0, count($result) - 1)];
-}
-
-function getAuthors()
-{
-  // get all distinct author names
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('
-    SELECT DISTINCT id, lastName, firstName FROM author ORDER BY lastName
-  ');
-  $statement->execute();
-
-  $connection = null;
-
-  return $statement->fetchAll();
-}
-
-function getCenturies()
-{
-  // get all distinct centuries
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('
-    SELECT DISTINCT century FROM author ORDER BY century
-  ');
-  $statement->execute();
-
-  $connection = null;
-
-  return $statement->fetchAll();
-}
-
 function getIndexData()
 {
   $indexData = [];
@@ -83,84 +34,6 @@ function getIndexData()
   $indexData['centuries'] = getCenturies();
 
   return $indexData;
-}
-
-function getAuthorId($authorNames)
-{
-  // search for author in database
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('
-    SELECT * FROM author WHERE lastName=? AND firstName=?
-  ');
-  $statement->execute($authorNames);
-  $result = $statement->fetchAll();
-
-  $connection = null;
-
-  $authorId = null;
-  if (!empty($result)) {
-    $authorId = $result[0]['id'];
-  }
-
-  return $authorId;
-}
-
-function insertAuthor($authorData)
-{
-  // add author to database
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('
-    INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)
-  ');
-  $statement->execute($authorData);
-
-  $lastInsertId = $connection->lastInsertId();
-
-  $connection = null;
-
-  if ($lastInsertId) {
-    echo 'Auteur ajouté à la base de données<br/>';
-    return $lastInsertId;
-  } else {
-    die("Failed to insert author into database");
-  }
-}
-
-function quoteExists($quoteText)
-{
-  // search for quote in database
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('SELECT * FROM quote WHERE text=?');
-  $statement->execute([$quoteText]);
-  $result = $statement->fetchAll();
-
-  $connection = null;
-
-  return !empty($result);
-}
-
-function insertQuote($quoteText, $authorId)
-{
-  // add quote to database
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('
-    INSERT INTO quote (text, authorId) VALUES (?, ?)
-  ');
-  $statement->execute([$quoteText, $authorId]);
-
-  if ($connection->lastInsertId()) {
-    echo '<br/>Citation ajoutée à la base de données<br/>';
-  }
-
-  $connection = null;
 }
 
 function buildQuery($postData)
@@ -196,18 +69,4 @@ function buildQuery($postData)
 
   // var_dump($sql);
   return $sql;
-}
-
-function getQuotes($sql)
-{
-  $connection = getConnection();
-
-  $statement = $connection->prepare($sql);
-  $statement->execute();
-
-  $quotes = $statement->fetchAll();
-
-  $connection = null;
-  
-  return $quotes;
 }
