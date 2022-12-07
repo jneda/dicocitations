@@ -77,21 +77,4 @@ $quotes = getQuotes($connection, $sql);
 // close connection
 $connection = null;
 
-if (count($quotes) === 0) {
-  include './templates/noQuotesFound.html';
-} else {
-  include './templates/quoteTable.php';
-}
-
-?>
-
-<nav>
-  <div class="list-group">
-    <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
-    <a href="saisiecit.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
-  </div>
-</nav>
-
-
-<?php
-include './templates/footer.html';
+require('./templates/afficheCit.php');
