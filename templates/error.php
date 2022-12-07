@@ -6,7 +6,7 @@ ob_start();
 
 ?>
 
-<div class="container border rounded my-5 p-3">
+<div class="container border rounded my-5 p-3 alert alert-danger">
   <p><?= $errorMessage ?></p>
 </div>
 

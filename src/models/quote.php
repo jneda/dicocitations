@@ -57,6 +57,10 @@ function insertQuote($quoteText, $authorId)
 
   $connection = getConnection();
 
+  if ($quoteText === '') {
+    throw new Exception('Texte de la citation manquant.');
+  }
+
   $statement = $connection->prepare('
     INSERT INTO quote (text, authorId) VALUES (?, ?)
   ');
