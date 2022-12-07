@@ -162,3 +162,52 @@ function insertQuote($quoteText, $authorId)
 
   $connection = null;
 }
+
+function buildQuery($postData)
+{
+  extract($_POST);
+
+  $sql = 'SELECT text, lastName, firstName, century FROM quote
+    INNER JOIN author ON quote.authorId = author.id';
+
+  // handle query search and selects
+
+  $queries = [];
+
+  if ($q !== '') {
+    $queries[] = 'text LIKE "%' . $q . '%"';
+  }
+  if (isset($author) && !empty($author)) {
+    $queries[] = 'author.id = ' . $author;
+  }
+  if (isset($century) && !empty($century)) {
+    $queries[] = 'century = ' . $century;
+  }
+
+  if (count($queries) > 0) {
+    $sql .= ' WHERE ' . implode(' AND ', $queries);
+  }
+
+  // assign sort by author as default
+  if (!isset($sortBy) || $sortBy === 'author') {
+    $sortBy = 'author.lastName, author.firstName';
+  }
+  $sql .=  ' ORDER BY ' . $sortBy;
+
+  // var_dump($sql);
+  return $sql;
+}
+
+function getQuotes($sql)
+{
+  $connection = getConnection();
+
+  $statement = $connection->prepare($sql);
+  $statement->execute();
+
+  $quotes = $statement->fetchAll();
+
+  $connection = null;
+  
+  return $quotes;
+}
