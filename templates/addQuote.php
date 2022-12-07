@@ -6,7 +6,7 @@ ob_start();
 ?>
 
 <div class="container border rounded my-5 p-3">
-  <form action="addQuote.php" method="POST">
+  <form action="/?action=addQuote" method="POST">
     <div class="mb-3">
       <label for="lastName" class="form-label">Nom de l'auteur :</label>
       <input type="text" name="lastName" id="lastName" class="form-control">
@@ -19,9 +19,9 @@ ob_start();
       <label for="century" class="form-label">Siècle :</label>
       <select name="century" id="century" class="form-select" required>
         <option disabled selected value></option>
-        <?php for ($i = 21; $i >= -10; $i--) {
-          echo '<option value="' . $i . '">' . $i . '</option>';
-        } ?>
+        <?php for ($i = 21; $i >= -10; $i--) { ?>
+          <option value="<?= $i ?>"><?= $i ?></option>;
+        <?php } ?>
       </select>
     </div>
     <div class="mb-3">
