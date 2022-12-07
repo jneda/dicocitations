@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container border rounded my-5 p-3">
   <form action="affichecit.php" method="POST">
     <div class="mb-3">
       <label for="q" class="form-label">Rechercher :</label>
