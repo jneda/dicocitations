@@ -28,7 +28,7 @@
 </div>
 
 <nav>
-  <div class="container list-group">
+  <div class="list-group">
     <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
   </div>
 </nav>
