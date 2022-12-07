@@ -17,45 +17,45 @@ try {
     $password
   );
   $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  //echo 'Connection established';  
-
-  // get a random quote
-
-  // get quotes count
-  $statement = $connection->prepare('
-    SELECT * FROM quote
-    INNER JOIN author ON author.id = quote.authorId'
-  );
-  $statement->execute();
-  $result = $statement->fetchAll();
-
-  $randomQuote = $result[rand(0, count($result) - 1)];
-
-  include('./templates/quote.php');
-
-  // get all distinct author names
-  $statement = $connection->prepare('
-    SELECT DISTINCT id, lastName, firstName FROM author ORDER BY lastName'
-  );
-  $statement->execute();
-  $authors = $statement->fetchAll();
-
-  //var_dump($authors);
-
-  // get all distinct centuries
-  $statement = $connection->prepare('
-    SELECT DISTINCT century FROM author ORDER BY century'
-  );
-  $statement->execute();
-  $centuries = $statement->fetchAll();
-
-  //var_dump($centuries);
-
-  // close connection
-  $connection = null;
+  //echo 'Connection established';
 } catch (Exception $e) {
-  echo 'Connection failed: ' . $e->getMessage();
+  die('Connection failed: ' . $e->getMessage());
 }
+
+// get a random quote
+
+// get quotes count
+$statement = $connection->prepare('
+  SELECT * FROM quote
+  INNER JOIN author ON author.id = quote.authorId
+');
+$statement->execute();
+$result = $statement->fetchAll();
+
+$randomQuote = $result[rand(0, count($result) - 1)];
+
+include('./templates/quote.php');
+
+// get all distinct author names
+$statement = $connection->prepare('
+  SELECT DISTINCT id, lastName, firstName FROM author ORDER BY lastName
+');
+$statement->execute();
+$authors = $statement->fetchAll();
+
+//var_dump($authors);
+
+// get all distinct centuries
+$statement = $connection->prepare('
+  SELECT DISTINCT century FROM author ORDER BY century
+');
+$statement->execute();
+$centuries = $statement->fetchAll();
+
+//var_dump($centuries);
+
+// close connection
+$connection = null;
 
 include './templates/searchQuoteForm.php';
 
