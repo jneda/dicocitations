@@ -13,6 +13,7 @@ function addQuote()
     extract($_POST);
 
     $authorRepository = new AuthorRepository();
+    $authorRepository->connection = new DatabaseConnection();
 
     $authorId = $authorRepository->getAuthorId([$lastName, $firstName]);
     if ($authorId === null) {

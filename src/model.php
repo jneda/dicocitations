@@ -7,6 +7,7 @@ require_once('src/models/quote.php');
 function getIndexData()
 {
   $authorRepository = new AuthorRepository();
+  $authorRepository->connection = new DatabaseConnection();
   $quoteRepository = new QuoteRepository();
   $quoteRepository->connection = new DatabaseConnection();
 

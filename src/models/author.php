@@ -17,15 +17,13 @@ class Author
 
 class AuthorRepository
 {
-  public ?PDO $database = null;
+  public DatabaseConnection $connection;
 
   public function getAuthors(): array
   {
     // get all distinct author names
 
-    $this->dbConnect();
-
-    $statement = $this->database->prepare('
+    $statement = $this->getDb()->prepare('
       SELECT DISTINCT id, lastName, firstName, century
       FROM author ORDER BY lastName
     ');
@@ -50,9 +48,7 @@ class AuthorRepository
   {
     // get all distinct centuries
 
-    $this->dbConnect();
-
-    $statement = $this->database->prepare('
+    $statement = $this->getDb()->prepare('
       SELECT DISTINCT century FROM author ORDER BY century
     ');
     $statement->execute();
@@ -64,9 +60,7 @@ class AuthorRepository
   {
     // search for author in database
 
-    $this->dbConnect();
-
-    $statement = $this->database->prepare('
+    $statement = $this->getDb()->prepare('
       SELECT * FROM author WHERE lastName=? AND firstName=?
     ');
     $statement->execute($authorNames);
@@ -85,14 +79,12 @@ class AuthorRepository
   {
     // add author to database
 
-    $this->dbConnect();
-
-    $statement = $this->database->prepare('
+    $statement = $this->getDb()->prepare('
       INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)
     ');
     $statement->execute($authorData);
 
-    $lastInsertId = $this->database->lastInsertId();
+    $lastInsertId = $this->getDb()->lastInsertId();
 
     if ($lastInsertId) {
       return $lastInsertId;
@@ -100,23 +92,9 @@ class AuthorRepository
       throw new Exception("L'ajout de l'auteur à la base de données a échoué.");
     }
   }
-
-  public function dbConnect(): void
+  
+  public function getDb(): PDO
   {
-    // establish connection
-    if ($this->database === null) {
-      // get database config
-      $dbConfigFile = file_get_contents('./config/config.json');
-      $dbConfig = json_decode($dbConfigFile);
-
-      extract(get_object_vars($dbConfig->database));
-
-      $this->database = new PDO(
-        'mysql:host=' . $host . ';dbname=' . $dbname,
-        $login,
-        $password
-      );
-      $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
+    return $this->connection->getDb();
   }
 }
