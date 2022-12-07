@@ -25,24 +25,25 @@ try {
     SELECT text, lastName, firstName, century FROM quote
     INNER JOIN author ON quote.authorId = author.id';
 
-  // handle query string
+  // handle query search and selects
+
+  $queries = [];
 
   if ($q !== '') {
-    $sql .= '  WHERE text LIKE "%' . $q . '%"';
+    $queries[] = 'text LIKE "%' . $q . '%"';
   }
-  
-  if ($q !== '') {
-    $sql .= ' AND';
-  } else {
-    $sql .= ' WHERE';
+  if (isset($author)) {
+    $queries[] = 'author.id = ' . $author;
   }
-  if (isset($author) && isset($century)) {
-    $sql .= ' author.id = ' . $author . ' AND century = ' . $century;
-  } else if (isset($author)) {
-    $sql .= ' author.id = ' . $author;
-  } else if (isset($century)) {
-    $sql .= ' century = ' . $century;
-  }  
+  if (isset($century)) {
+    $queries[] = 'century = ' . $century;
+  }
+
+  var_dump($queries);
+
+  if (count($queries) > 0) {
+    $sql .= ' WHERE ' . implode(' AND ', $queries);
+  }
 
   // assign sort by author as default
   if (!isset($sortBy) || $sortBy === 'author') {
@@ -67,7 +68,11 @@ try {
   echo 'Connection failed: ' . $e->getMessage();
 }
 
-include './includes/quoteTable.php';
+if (count($quotes) === 0) {
+  include './includes/noQuotesFound.html';
+} else {
+  include './includes/quoteTable.php';
+}
 
 ?>
 <a href="index.php">Accueil</a>
