@@ -28,8 +28,8 @@ ob_start();
         <select name="author" id="author" class="form-select">
           <option selected value></option>
           <?php foreach ($authors as $author) { ?>
-            <option value="<?= $author['id'] ?>">
-              <?= $author['lastName'] . ' ' . $author['firstName'] ?>
+            <option value="<?= $author->id ?>">
+              <?= $author->getFullName() ?>
             </option>
           <?php } ?>
         </select>

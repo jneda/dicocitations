@@ -2,23 +2,48 @@
 
 require_once('src/model.php');
 
-function getAuthors()
+class Author
+{
+  public int $id;
+  public string $lastName;
+  public string $firstName;
+  public int $century;
+
+  public function getFullName(): string
+  {
+    return $this->lastName . ' ' . $this->firstName;
+  }
+}
+
+function getAuthors(): array
 {
   // get all distinct author names
 
   $connection = getConnection();
 
   $statement = $connection->prepare('
-    SELECT DISTINCT id, lastName, firstName FROM author ORDER BY lastName
+    SELECT DISTINCT id, lastName, firstName, century FROM author ORDER BY lastName
   ');
   $statement->execute();
 
+  $authors = [];
+  while ($row = $statement->fetch()) {
+    $author = new Author();
+
+    $author->id = $row['id'];
+    $author->lastName = $row['lastName'];
+    $author->firstName = $row['firstName'];
+    $author->century = $row['century'];
+
+    $authors[] = $author;
+  }
+
   $connection = null;
 
-  return $statement->fetchAll();
+  return $authors;
 }
 
-function getCenturies()
+function getCenturies(): array
 {
   // get all distinct centuries
 
@@ -34,7 +59,7 @@ function getCenturies()
   return $statement->fetchAll();
 }
 
-function getAuthorId($authorNames)
+function getAuthorId(array $authorNames): int
 {
   // search for author in database
 
@@ -44,19 +69,20 @@ function getAuthorId($authorNames)
     SELECT * FROM author WHERE lastName=? AND firstName=?
   ');
   $statement->execute($authorNames);
-  $result = $statement->fetchAll();
+
+  $result = $statement->fetch();
 
   $connection = null;
 
   $authorId = null;
   if (!empty($result)) {
-    $authorId = $result[0]['id'];
+    $authorId = $result['id'];
   }
 
   return $authorId;
 }
 
-function insertAuthor($authorData)
+function insertAuthor(array $authorData): int
 {
   // add author to database
 
@@ -72,7 +98,6 @@ function insertAuthor($authorData)
   $connection = null;
 
   if ($lastInsertId) {
-    echo 'Auteur ajouté à la base de données<br/>';
     return $lastInsertId;
   } else {
     throw new Exception("L'ajout de l'auteur à la base de données a échoué.");
