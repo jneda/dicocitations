@@ -17,7 +17,7 @@ ob_start();
 </div>
 
 <div class="container border rounded my-5 p-3">
-  <form action="showQuotes.php" method="POST">
+  <form action="index.php?action=showQuotes" method="POST">
     <div class="mb-3">
       <label for="q" class="form-label">Rechercher :</label>
       <input type="search" name="q" id="q" class="form-control">
@@ -62,7 +62,7 @@ ob_start();
 
 <nav>
   <div class="list-group">
-    <a href="addQuote.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
+    <a href="/?action=addQuote" class="list-group-item list-group-item-action">Ajouter une citation</a>
   </div>
 </nav>
 

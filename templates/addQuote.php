@@ -6,7 +6,7 @@ ob_start();
 ?>
 
 <div class="container border rounded my-5 p-3">
-  <form action="saisiecit.php" method="POST">
+  <form action="addQuote.php" method="POST">
     <div class="mb-3">
       <label for="lastName" class="form-label">Nom de l'auteur :</label>
       <input type="text" name="lastName" id="lastName" class="form-control">
@@ -37,7 +37,7 @@ ob_start();
 
 <nav>
   <div class="list-group">
-    <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
+    <a href="/" class="list-group-item list-group-item-action">Accueil</a>
   </div>
 </nav>
 
