@@ -3,33 +3,14 @@
 require_once('src/models/author.php');
 require_once('src/models/quote.php');
 
-function getConnection()
-{
-  // establish connection
-  
-  // get database config
-  $dbConfigFile = file_get_contents('./config/config.json');
-  $dbConfig = json_decode($dbConfigFile);
-
-  extract(get_object_vars($dbConfig->database));
-
-  $connection = new PDO(
-    'mysql:host=' . $host . ';dbname=' . $dbname,
-    $login,
-    $password
-  );
-  $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-  return $connection;
-}
-
 function getIndexData()
 {
+  $authorRepository = new AuthorRepository();
   $quoteRepository = new QuoteRepository();
   $indexData = [];
   $indexData['randomQuote'] = $quoteRepository->getRandomQuote();
-  $indexData['authors'] = getAuthors();
-  $indexData['centuries'] = getCenturies();
+  $indexData['authors'] = $authorRepository->getAuthors();
+  $indexData['centuries'] = $authorRepository->getCenturies();
 
   return $indexData;
 }

@@ -15,91 +15,108 @@ class Author
   }
 }
 
-function getAuthors(): array
+class AuthorRepository
 {
-  // get all distinct author names
+  public ?PDO $database = null;
 
-  $connection = getConnection();
+  public function getAuthors(): array
+  {
+    // get all distinct author names
 
-  $statement = $connection->prepare('
-    SELECT DISTINCT id, lastName, firstName, century FROM author ORDER BY lastName
-  ');
-  $statement->execute();
+    $this->dbConnect();
 
-  $authors = [];
-  while ($row = $statement->fetch()) {
-    $author = new Author();
+    $statement = $this->database->prepare('
+      SELECT DISTINCT id, lastName, firstName, century
+      FROM author ORDER BY lastName
+    ');
+    $statement->execute();
 
-    $author->id = $row['id'];
-    $author->lastName = $row['lastName'];
-    $author->firstName = $row['firstName'];
-    $author->century = $row['century'];
+    $authors = [];
+    while ($row = $statement->fetch()) {
+      $author = new Author();
 
-    $authors[] = $author;
+      $author->id = $row['id'];
+      $author->lastName = $row['lastName'];
+      $author->firstName = $row['firstName'];
+      $author->century = $row['century'];
+
+      $authors[] = $author;
+    }
+
+    return $authors;
   }
 
-  $connection = null;
+  public function getCenturies(): array
+  {
+    // get all distinct centuries
 
-  return $authors;
-}
+    $this->dbConnect();
 
-function getCenturies(): array
-{
-  // get all distinct centuries
+    $statement = $this->database->prepare('
+      SELECT DISTINCT century FROM author ORDER BY century
+    ');
+    $statement->execute();
 
-  $connection = getConnection();
-
-  $statement = $connection->prepare('
-    SELECT DISTINCT century FROM author ORDER BY century
-  ');
-  $statement->execute();
-
-  $connection = null;
-
-  return $statement->fetchAll();
-}
-
-function getAuthorId(array $authorNames): ?int
-{
-  // search for author in database
-
-  $connection = getConnection();
-
-  $statement = $connection->prepare('
-    SELECT * FROM author WHERE lastName=? AND firstName=?
-  ');
-  $statement->execute($authorNames);
-
-  $result = $statement->fetch();
-
-  $connection = null;
-
-  $authorId = null;
-  if (!empty($result)) {
-    $authorId = $result['id'];
+    return $statement->fetchAll();
   }
 
-  return $authorId;
-}
+  public function getAuthorId(array $authorNames): ?int
+  {
+    // search for author in database
 
-function insertAuthor(array $authorData): int
-{
-  // add author to database
+    $this->dbConnect();
 
-  $connection = getConnection();
+    $statement = $this->database->prepare('
+      SELECT * FROM author WHERE lastName=? AND firstName=?
+    ');
+    $statement->execute($authorNames);
 
-  $statement = $connection->prepare('
-    INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)
-  ');
-  $statement->execute($authorData);
+    $result = $statement->fetch();
 
-  $lastInsertId = $connection->lastInsertId();
+    $authorId = null;
+    if (!empty($result)) {
+      $authorId = $result['id'];
+    }
 
-  $connection = null;
+    return $authorId;
+  }
 
-  if ($lastInsertId) {
-    return $lastInsertId;
-  } else {
-    throw new Exception("L'ajout de l'auteur à la base de données a échoué.");
+  public function insertAuthor(array $authorData): int
+  {
+    // add author to database
+
+    $this->dbConnect();
+
+    $statement = $this->database->prepare('
+      INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)
+    ');
+    $statement->execute($authorData);
+
+    $lastInsertId = $this->database->lastInsertId();
+
+    if ($lastInsertId) {
+      return $lastInsertId;
+    } else {
+      throw new Exception("L'ajout de l'auteur à la base de données a échoué.");
+    }
+  }
+
+  public function dbConnect(): void
+  {
+    // establish connection
+    if ($this->database === null) {
+      // get database config
+      $dbConfigFile = file_get_contents('./config/config.json');
+      $dbConfig = json_decode($dbConfigFile);
+
+      extract(get_object_vars($dbConfig->database));
+
+      $this->database = new PDO(
+        'mysql:host=' . $host . ';dbname=' . $dbname,
+        $login,
+        $password
+      );
+      $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
   }
 }

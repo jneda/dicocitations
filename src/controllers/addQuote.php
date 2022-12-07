@@ -1,6 +1,7 @@
 <?php
 
 require_once('src/model.php');
+require_once('src/models/author.php');
 require_once('src/models/quote.php');
 
 function addQuote()
@@ -10,9 +11,13 @@ function addQuote()
   if (isset($_POST) && !empty($_POST)) {
     extract($_POST);
 
-    $authorId = getAuthorId([$lastName, $firstName]);
+    $authorRepository = new AuthorRepository();
+
+    $authorId = $authorRepository->getAuthorId([$lastName, $firstName]);
     if ($authorId === null) {
-      $authorId = insertAuthor([$lastName, $firstName, $century]);
+      $authorId = $authorRepository->insertAuthor(
+        [$lastName, $firstName, $century]
+      );
     }
 
     $quoteRepository = new QuoteRepository();
