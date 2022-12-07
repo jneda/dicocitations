@@ -1,3 +1,10 @@
+<?php
+
+$title = "Dictionnaire de citations | Recherche";
+ob_start();
+
+?>
+
 <div class="card my-5">
   <div class="card-body">
     <blockquote class="blockquote">
@@ -58,3 +65,8 @@
     <a href="addQuote.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
   </div>
 </nav>
+
+<?php
+
+$content = ob_get_clean();
+require('layout.php');

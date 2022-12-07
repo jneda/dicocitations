@@ -1,3 +1,10 @@
+<?php
+
+$title = 'Dictionnaire de citations | Ajouter une citation';
+ob_start();
+
+?>
+
 <div class="container border rounded my-5 p-3">
   <form action="saisiecit.php" method="POST">
     <div class="mb-3">
@@ -33,3 +40,8 @@
     <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
   </div>
 </nav>
+
+<?php
+
+$content = ob_get_clean();
+require('layout.php');

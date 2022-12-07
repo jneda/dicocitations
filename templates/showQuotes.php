@@ -1,5 +1,9 @@
 <?php
 
+$title = 'Dictionnaire de citations | Résultats';
+
+ob_start();
+
 if (count($quotes) === 0) {
   require('./templates/noQuotesFound.html');
 } else {
@@ -17,4 +21,6 @@ if (count($quotes) === 0) {
 
 
 <?php
-require './templates/footer.html';
+
+$content = ob_get_clean();
+require 'layout.php';

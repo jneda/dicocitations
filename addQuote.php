@@ -2,9 +2,7 @@
 
 require('./src/model.php');
 
-require('./templates/header.html');
-require('./templates/addQuoteForm.php');
-require('./templates/footer.html');
+require('./templates/addQuote.php');
 
 if (isset($_POST) && !empty($_POST)) {
   extract($_POST);
