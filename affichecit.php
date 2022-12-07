@@ -32,10 +32,10 @@ try {
   if ($q !== '') {
     $queries[] = 'text LIKE "%' . $q . '%"';
   }
-  if (isset($author)) {
+  if (isset($author) && !empty($author)) {
     $queries[] = 'author.id = ' . $author;
   }
-  if (isset($century)) {
+  if (isset($century) && !empty($century)) {
     $queries[] = 'century = ' . $century;
   }
 
