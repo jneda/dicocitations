@@ -1,89 +1,103 @@
 <?php
 
 include './templates/header.html';
-
 include './templates/addQuoteForm.php';
 
-if (isset($_POST) && !empty($_POST)) {
-  //var_dump($_POST);
-
-  // establish connection
-  $connection = null;
+function getConnection()
+{
   try {
     // get database config
     $dbConfigFile = file_get_contents('./config/config.json');
     $dbConfig = json_decode($dbConfigFile);
-    //var_dump(get_object_vars($dbConfig->database));
     extract(get_object_vars($dbConfig->database));
-    
+
     $connection = new PDO(
       'mysql:host=' . $host . ';dbname=' . $dbname,
       $login,
       $password
     );
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    //echo 'Connection established';
 
-    // search for author in database
-    extract($_POST);
-    $statement = $connection->prepare('
-      SELECT * FROM author WHERE lastName=? AND firstName=?'
-    );
-    $statement->execute([$lastName, $firstName]);
-
-    // show result
-    $result = $statement->fetchAll();
-    // var_dump($result);
-    // var_dump($result[0]['id']);
-
-    $authorId = null;
-    if (empty($result)) {
-      //echo 'Auteur inconnu - ';      
-
-      // add author to database
-      $statement = $connection->prepare('
-        INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)'
-      );
-      $statement->execute([$lastName, $firstName, $century]);
-
-      $lastInsertId = $connection->lastInsertId();
-      if ($lastInsertId) {
-        echo 'Auteur ajouté à la base de données<br/>';
-        $authorId = $lastInsertId;
-      }
-    } else {
-      $authorId = $result[0]['id'];
-    }
-
-    //echo 'Id de l\'auteur : ' . $authorId . '<br/>';
-
-    // search for quote in database
-    $statement = $connection->prepare('SELECT * FROM quote WHERE text=?');
-    $statement->execute([$quoteText]);
-
-    // show result
-    $result = $statement->fetchAll();
-    //var_dump($result);
-
-    if (!empty($result)) {
-      echo 'Cette citation existe déjà<br/>';
-    } else {
-      // add quote to database
-      $statement = $connection->prepare('
-        INSERT INTO quote (text, authorId) VALUES (?, ?)'
-      );
-      $statement->execute([$quoteText, $authorId]);
-
-      if ($connection->lastInsertId()) {
-        echo '<br/>Citation ajoutée à la base de données<br/>';
-      }
-    }
-
-    // close connection
-    $connection = null;
+    return $connection;
   } catch (Exception $e) {
-    echo 'Connection failed: ' . $e->getMessage();
+    die('Connection failed: ' . $e->getMessage());
   }
+}
+
+function getAuthorId($connection, $authorNames)
+{
+  // search for author in database
+  $statement = $connection->prepare('
+    SELECT * FROM author WHERE lastName=? AND firstName=?
+  ');
+  $statement->execute($authorNames);
+  $result = $statement->fetchAll();
+
+  $authorId = null;
+  if (!empty($result)) {
+    $authorId = $result[0]['id'];
+  }
+
+  return $authorId;
+}
+
+function insertAuthor($connection, $authorData)
+{
+  // add author to database
+  $statement = $connection->prepare('
+    INSERT INTO author (lastName, firstName, century) VALUES (?, ?, ?)
+  ');
+  $statement->execute($authorData);
+
+  $lastInsertId = $connection->lastInsertId();
+  if ($lastInsertId) {
+    echo 'Auteur ajouté à la base de données<br/>';
+    return $lastInsertId;
+  } else {
+    die("Failed to insert author into database");
+  }
+}
+
+function quoteExists($connection, $quoteText)
+{
+  // search for quote in database
+  $statement = $connection->prepare('SELECT * FROM quote WHERE text=?');
+  $statement->execute([$quoteText]);
+  $result = $statement->fetchAll();
+
+  return !empty($result);
+}
+
+function insertQuote($connection, $quoteText, $authorId)
+{
+  // add quote to database
+  $statement = $connection->prepare('
+    INSERT INTO quote (text, authorId) VALUES (?, ?)
+  ');
+  $statement->execute([$quoteText, $authorId]);
+
+  if ($connection->lastInsertId()) {
+    echo '<br/>Citation ajoutée à la base de données<br/>';
+  }
+}
+
+if (isset($_POST) && !empty($_POST)) {
+  extract($_POST);
+  $connection = getConnection();
+  
+  $authorId = getAuthorId($connection, [$lastName, $firstName]);
+  if ($authorId === null) {
+    $authorId = insertAuthor($connection, [$lastName, $firstName, $century]);
+  }
+
+  if (quoteExists($connection, $quoteText)) {
+    echo 'Cette citation existe déjà<br/>';
+  } else {
+    insertQuote($connection, $quoteText, $authorId);
+  }
+
+  // close connection
+  $connection = null;
 }
 
 include './templates/footer.html';
