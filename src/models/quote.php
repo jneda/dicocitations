@@ -2,41 +2,50 @@
 
 require_once('src/model.php');
 
+class Quote
+{
+  public string $text;
+  public string $authorName;
+  public int $century;
+}
 
-function getQuotes($sql)
+
+function getQuotes(string $sql): array
 {
   $connection = getConnection();
 
   $statement = $connection->prepare($sql);
   $statement->execute();
 
-  $quotes = $statement->fetchAll();
+  $quotes = [];
+  while ($row = $statement->fetch()) {
+    $quote = new Quote();
+    $quote->text = $row['text'];
+    $quote->authorName = $row['lastName'] . ' ' . $row['firstName'];
+    $quote->century = $row['century'];
+    $quotes[] = $quote;
+  }
 
   $connection = null;
   
   return $quotes;
 }
 
-function getRandomQuote()
+function getRandomQuote(): Quote
 {
   // get a random quote
 
-  $connection = getConnection();
-
-  // get quotes count
-  $statement = $connection->prepare('
+  $sql = '
     SELECT * FROM quote
     INNER JOIN author ON author.id = quote.authorId
-  ');
-  $statement->execute();
-  $result = $statement->fetchAll();
+  ';
 
-  $connection = null;
+  $quotes = getQuotes($sql);
 
-  return $result[rand(0, count($result) - 1)];
+  return $quotes[rand(0, count($quotes) - 1)];
 }
 
-function quoteExists($quoteText)
+function quoteExists(string $quoteText): bool
 {
   // search for quote in database
 
@@ -51,7 +60,7 @@ function quoteExists($quoteText)
   return !empty($result);
 }
 
-function insertQuote($quoteText, $authorId)
+function insertQuote(string $quoteText, int $authorId): bool
 {
   // add quote to database
 

@@ -7,9 +7,9 @@
     </thead>
     <?php foreach ($quotes as $quote) { ?>
       <tr>
-        <td><?= $quote['text'] ?></td>
-        <td><?= $quote['lastName'] . ' ' . $quote['firstName'] ?></td>
-        <td><?= $quote['century'] ?></td>
+        <td><?= $quote->text ?></td>
+        <td><?= $quote->authorName ?></td>
+        <td><?= $quote->century ?></td>
       </tr>
     <?php } ?>
   </table>

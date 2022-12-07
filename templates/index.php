@@ -8,9 +8,9 @@ ob_start();
 <div class="card my-5">
   <div class="card-body">
     <blockquote class="blockquote">
-      <p class="mb-4"><?= $randomQuote['text']; ?></p>
+      <p class="mb-4"><?= $randomQuote->text ?></p>
       <figcaption class="blockquote-footer">
-        <?= $randomQuote['firstName'] . ' ' . $randomQuote['lastName']; ?>
+        <?= $randomQuote->authorName ?>
       </figcaption>
   </div>
   </blockquote>
