@@ -2,6 +2,7 @@
 
 include './templates/header.html';
 include './templates/addQuoteForm.php';
+include './templates/footer.html';
 
 function getConnection()
 {
@@ -99,5 +100,3 @@ if (isset($_POST) && !empty($_POST)) {
   // close connection
   $connection = null;
 }
-
-include './templates/footer.html';

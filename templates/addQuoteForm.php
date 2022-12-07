@@ -10,7 +10,8 @@
     </div>
     <div class="mb-3">
       <label for="century" class="form-label">Siècle :</label>
-      <select name="century" id="century" class="form-select">
+      <select name="century" id="century" class="form-select" required>
+        <option disabled selected value></option>
         <?php for ($i = 21; $i >= -10; $i--) {
           echo '<option value="' . $i . '">' . $i . '</option>';
         } ?>
