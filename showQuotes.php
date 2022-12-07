@@ -6,4 +6,4 @@ $sql = buildQuery($_POST);
 $quotes = getQuotes($sql);
 
 require('./templates/header.html');
-require('./templates/afficheCit.php');
+require('./templates/showQuotes.php');

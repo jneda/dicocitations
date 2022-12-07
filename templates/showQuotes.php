@@ -11,7 +11,7 @@ if (count($quotes) === 0) {
 <nav>
   <div class="list-group">
     <a href="index.php" class="list-group-item list-group-item-action">Accueil</a>
-    <a href="saisiecit.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
+    <a href="addQuote.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
   </div>
 </nav>
 

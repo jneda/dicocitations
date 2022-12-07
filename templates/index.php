@@ -10,7 +10,7 @@
 </div>
 
 <div class="container border rounded my-5 p-3">
-  <form action="affichecit.php" method="POST">
+  <form action="showQuotes.php" method="POST">
     <div class="mb-3">
       <label for="q" class="form-label">Rechercher :</label>
       <input type="search" name="q" id="q" class="form-control">
@@ -55,6 +55,6 @@
 
 <nav>
   <div class="list-group">
-    <a href="saisiecit.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
+    <a href="addQuote.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
   </div>
 </nav>
