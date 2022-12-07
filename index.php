@@ -1,6 +1,6 @@
 <?php
 
-include './templates/header.html';
+require('./templates/header.html');
 
 function getConnection()
 {
@@ -66,6 +66,5 @@ $authors = getAuthors($connection);
 $centuries = getCenturies($connection);
 $connection = null;
 
-include('./templates/quote.php');
-include './templates/searchQuoteForm.php';
-include './templates/footer.html';
+require('./templates/index.php');
+require('./templates/footer.html');

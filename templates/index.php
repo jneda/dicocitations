@@ -1,3 +1,14 @@
+<div class="card my-5">
+  <div class="card-body">
+    <blockquote class="blockquote">
+      <p class="mb-4"><?= $randomQuote['text']; ?></p>
+      <figcaption class="blockquote-footer">
+        <?= $randomQuote['firstName'] . ' ' . $randomQuote['lastName']; ?>
+      </figcaption>
+  </div>
+  </blockquote>
+</div>
+
 <div class="container border rounded my-5 p-3">
   <form action="affichecit.php" method="POST">
     <div class="mb-3">
@@ -41,6 +52,7 @@
     <input type="submit" value="Rechercher" class="btn btn-primary mb-3">
   </form>
 </div>
+
 <nav>
   <div class="list-group">
     <a href="saisiecit.php" class="list-group-item list-group-item-action">Ajouter une citation</a>
