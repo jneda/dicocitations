@@ -1,6 +1,7 @@
 <?php
 
 require_once('src/model.php');
+require_once('src/lib/database.php');
 
 class Quote
 {
@@ -11,13 +12,11 @@ class Quote
 
 class QuoteRepository
 {
-  public ?PDO $database = null;
+  public DatabaseConnection $connection;
 
   public function getQuotes(string $sql): array
   {
-    $this->dbConnect();
-
-    $statement = $this->database->prepare($sql);
+    $statement = $this->getDb()->prepare($sql);
     $statement->execute();
 
     $quotes = [];
@@ -51,9 +50,7 @@ class QuoteRepository
   {
     // search for quote in database
 
-    $this->dbConnect();
-
-    $statement = $this->database->prepare('SELECT * FROM quote WHERE text=?');
+    $statement = $this->getDb()->prepare('SELECT * FROM quote WHERE text=?');
     $statement->execute([$quoteText]);
     $result = $statement->fetchAll();
 
@@ -68,20 +65,23 @@ class QuoteRepository
       throw new Exception('Texte de la citation manquant.');
     }
 
-    $this->dbConnect();
-
-    $statement = $this->database->prepare('
+    $statement = $this->getDb()->prepare('
     INSERT INTO quote (text, authorId) VALUES (?, ?)
   ');
     $statement->execute([$quoteText, $authorId]);
 
-    if ($this->database->lastInsertId()) {
+    if ($this->getDb()->lastInsertId()) {
       $ok = true;
     } else {
       $ok = false;
     }
 
     return $ok;
+  }
+
+  public function getDb(): PDO
+  {
+    return $this->connection->getDb();
   }
 
   public function dbConnect(): void

@@ -1,5 +1,6 @@
 <?php
 
+require_once('src/lib/database.php');
 require_once('src/model.php');
 require_once('src/models/author.php');
 require_once('src/models/quote.php');
@@ -21,6 +22,7 @@ function addQuote()
     }
 
     $quoteRepository = new QuoteRepository();
+    $quoteRepository->connection = new DatabaseConnection();
 
     if ($quoteRepository->quoteExists($quoteText)) {
       throw new Exception('Cette citation existe déjà.');
