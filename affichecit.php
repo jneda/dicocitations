@@ -39,7 +39,7 @@ try {
     $queries[] = 'century = ' . $century;
   }
 
-  var_dump($queries);
+  //var_dump($queries);
 
   if (count($queries) > 0) {
     $sql .= ' WHERE ' . implode(' AND ', $queries);
