@@ -2,29 +2,33 @@
 
 include './templates/header.html';
 
-//var_dump($_POST);
+function getConnection()
+{
+  // establish connection
+  try {
+    // get database config
+    $dbConfigFile = file_get_contents('./config/config.json');
+    $dbConfig = json_decode($dbConfigFile);
+    extract(get_object_vars($dbConfig->database));
 
-// establish connection
-$connection = null;
-try {
-  // get database config
-  $dbConfigFile = file_get_contents('./config/config.json');
-  $dbConfig = json_decode($dbConfigFile);
-  //var_dump(get_object_vars($dbConfig->database));
-  extract(get_object_vars($dbConfig->database));
+    $connection = new PDO(
+      'mysql:host=' . $host . ';dbname=' . $dbname,
+      $login,
+      $password
+    );
+    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  $connection = new PDO(
-    'mysql:host=' . $host . ';dbname=' . $dbname,
-    $login,
-    $password
-  );
-  $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  //echo 'Connection established';
+    return $connection;
+  } catch (Exception $e) {
+    die('Connection failed: ' . $e->getMessage());
+  }
+}
 
+function buildQuery($postData)
+{
   extract($_POST);
 
-  $sql = '
-    SELECT text, lastName, firstName, century FROM quote
+  $sql = 'SELECT text, lastName, firstName, century FROM quote
     INNER JOIN author ON quote.authorId = author.id';
 
   // handle query search and selects
@@ -41,8 +45,6 @@ try {
     $queries[] = 'century = ' . $century;
   }
 
-  //var_dump($queries);
-
   if (count($queries) > 0) {
     $sql .= ' WHERE ' . implode(' AND ', $queries);
   }
@@ -51,24 +53,29 @@ try {
   if (!isset($sortBy) || $sortBy === 'author') {
     $sortBy = 'author.lastName, author.firstName';
   }
-
-  // var_dump($sortBy);
   $sql .=  ' ORDER BY ' . $sortBy;
 
   // var_dump($sql);
+  return $sql;
+}
 
+function getQuotes($connection, $sql)
+{
   $statement = $connection->prepare($sql);
   $statement->execute();
 
   $quotes = $statement->fetchAll();
 
   // var_dump($quotes);
-
-  // close connection
-  $connection = null;
-} catch (Exception $e) {
-  echo 'Connection failed: ' . $e->getMessage();
+  return $quotes;
 }
+
+$connection = getConnection();
+$sql = buildQuery($_POST);
+$quotes = getQuotes($connection, $sql);
+
+// close connection
+$connection = null;
 
 if (count($quotes) === 0) {
   include './templates/noQuotesFound.html';
