@@ -75,6 +75,6 @@ function insertAuthor($authorData)
     echo 'Auteur ajouté à la base de données<br/>';
     return $lastInsertId;
   } else {
-    die("Failed to insert author into database");
+    throw new Exception("L'ajout de l'auteur à la base de données a échoué.");
   }
 }

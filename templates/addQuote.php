@@ -26,7 +26,7 @@ ob_start();
     </div>
     <div class="mb-3">
       <label for="quoteText" class="form-label">Texte de la citation :</label>
-      <textarea name="quoteText" id="quoteText" cols="30" rows="10" class="form-control"></textarea>
+      <textarea name="quoteText" id="quoteText" cols="30" rows="10" class="form-control" required></textarea>
     </div>
     <div class="mb-3">
       <input type="reset" value="Annuler" class="btn">

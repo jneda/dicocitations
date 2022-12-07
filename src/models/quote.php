@@ -63,8 +63,12 @@ function insertQuote($quoteText, $authorId)
   $statement->execute([$quoteText, $authorId]);
 
   if ($connection->lastInsertId()) {
-    echo '<br/>Citation ajoutée à la base de données<br/>';
+    $ok = true;
+  } else {
+    $ok = false;
   }
 
   $connection = null;
+
+  return $ok;
 }

@@ -6,24 +6,21 @@ require_once('src/models/quote.php');
 function getConnection()
 {
   // establish connection
-  try {
-    // get database config
-    $dbConfigFile = file_get_contents('./config/config.json');
-    $dbConfig = json_decode($dbConfigFile);
+  
+  // get database config
+  $dbConfigFile = file_get_contents('./config/config.json');
+  $dbConfig = json_decode($dbConfigFile);
 
-    extract(get_object_vars($dbConfig->database));
+  extract(get_object_vars($dbConfig->database));
 
-    $connection = new PDO(
-      'mysql:host=' . $host . ';dbname=' . $dbname,
-      $login,
-      $password
-    );
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $connection = new PDO(
+    'mysql:host=' . $host . ';dbname=' . $dbname,
+    $login,
+    $password
+  );
+  $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    return $connection;
-  } catch (Exception $e) {
-    die('Connection failed: ' . $e->getMessage());
-  }
+  return $connection;
 }
 
 function getIndexData()

@@ -15,9 +15,16 @@ function addQuote()
     }
 
     if (quoteExists($quoteText)) {
-      echo 'Cette citation existe déjà<br/>';
+      throw new Exception('Cette citation existe déjà.');
     } else {
-      insertQuote($quoteText, $authorId);
+      $ok = insertQuote($quoteText, $authorId);
+      if ($ok) {
+        $successMessage = 'Citation ajoutée à la base de données';
+        require('templates/success.php');
+      } else {
+        $failureMessage = 'La citation n\'a pas pu être ajoutée à la base de données';
+        require('templates/failure.php');
+      }
     }
   }
 }
