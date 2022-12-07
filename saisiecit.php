@@ -1,8 +1,8 @@
 <?php
 
-include './includes/header.html';
+include './templates/header.html';
 
-include './includes/addQuoteForm.php';
+include './templates/addQuoteForm.php';
 
 if (isset($_POST) && !empty($_POST)) {
   //var_dump($_POST);
@@ -86,4 +86,4 @@ if (isset($_POST) && !empty($_POST)) {
   }
 }
 
-include './includes/footer.html';
+include './templates/footer.html';

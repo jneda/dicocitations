@@ -1,6 +1,6 @@
 <?php
 
-include './includes/header.html';
+include './templates/header.html';
 
 //var_dump($_POST);
 
@@ -71,9 +71,9 @@ try {
 }
 
 if (count($quotes) === 0) {
-  include './includes/noQuotesFound.html';
+  include './templates/noQuotesFound.html';
 } else {
-  include './includes/quoteTable.php';
+  include './templates/quoteTable.php';
 }
 
 ?>
@@ -89,4 +89,4 @@ if (count($quotes) === 0) {
 
 
 <?php
-include './includes/footer.html';
+include './templates/footer.html';

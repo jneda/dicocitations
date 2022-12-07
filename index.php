@@ -1,6 +1,6 @@
 <?php
 
-include './includes/header.html';
+include './templates/header.html';
 
 // establish connection
 $connection = null;
@@ -31,7 +31,7 @@ try {
 
   $randomQuote = $result[rand(0, count($result) - 1)];
 
-  include('./includes/quote.php');
+  include('./templates/quote.php');
 
   // get all distinct author names
   $statement = $connection->prepare('
@@ -57,6 +57,6 @@ try {
   echo 'Connection failed: ' . $e->getMessage();
 }
 
-include './includes/searchQuoteForm.php';
+include './templates/searchQuoteForm.php';
 
-include './includes/footer.html';
+include './templates/footer.html';
