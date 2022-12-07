@@ -83,23 +83,4 @@ class QuoteRepository
   {
     return $this->connection->getDb();
   }
-
-  public function dbConnect(): void
-  {
-    // establish connection
-    if ($this->database === null) {
-      // get database config
-      $dbConfigFile = file_get_contents('./config/config.json');
-      $dbConfig = json_decode($dbConfigFile);
-
-      extract(get_object_vars($dbConfig->database));
-
-      $this->database = new PDO(
-        'mysql:host=' . $host . ';dbname=' . $dbname,
-        $login,
-        $password
-      );
-      $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-  }
 }
