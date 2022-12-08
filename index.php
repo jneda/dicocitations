@@ -4,18 +4,18 @@ require_once('src/controllers/homePage.php');
 require_once('src/controllers/showQuotes.php');
 require_once('src/controllers/addQuote.php');
 
-use function Application\Controller\AddQuote\addQuote;
-use function Application\Controller\HomePage\homePage;
-use function Application\Controller\ShowQuotes\showQuotes;
+use Application\Controller\AddQuote\AddQuote;
+use Application\Controller\HomePage\HomePage;
+use Application\Controller\ShowQuotes\ShowQuotes;
 
 try {
   if (empty($_GET)) {
-    homePage();
+    (new HomePage())->execute();
   } else {
     if ($_GET['action'] === 'showQuotes') {
-      showQuotes();
+      (new ShowQuotes())->execute();
     } else if ($_GET['action'] === 'addQuote') {
-      addQuote();
+      (new AddQuote())->execute();
     }
   }
 } catch (Exception $e) {

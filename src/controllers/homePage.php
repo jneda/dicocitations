@@ -10,24 +10,27 @@ use Application\Lib\Database\DatabaseConnection;
 use Application\Model\Author\AuthorRepository;
 use Application\Model\Quote\QuoteRepository;
 
-function getIndexData()
+class HomePage
 {
-  $authorRepository = new AuthorRepository();
-  $authorRepository->connection = new DatabaseConnection();
-  $quoteRepository = new QuoteRepository();
-  $quoteRepository->connection = new DatabaseConnection();
+  public function getIndexData(): array
+  {
+    $authorRepository = new AuthorRepository();
+    $authorRepository->connection = new DatabaseConnection();
+    $quoteRepository = new QuoteRepository();
+    $quoteRepository->connection = new DatabaseConnection();
 
-  $indexData = [];
-  $indexData['randomQuote'] = $quoteRepository->getRandomQuote();
-  $indexData['authors'] = $authorRepository->getAuthors();
-  $indexData['centuries'] = $authorRepository->getCenturies();
+    $indexData = [];
+    $indexData['randomQuote'] = $quoteRepository->getRandomQuote();
+    $indexData['authors'] = $authorRepository->getAuthors();
+    $indexData['centuries'] = $authorRepository->getCenturies();
 
-  return $indexData;
-}
+    return $indexData;
+  }
 
-function homePage()
-{
-  extract(getIndexData());
+  public function execute(): void
+  {
+    extract($this->getIndexData());
 
-  require('templates/index.php');
+    require('templates/index.php');
+  }
 }
