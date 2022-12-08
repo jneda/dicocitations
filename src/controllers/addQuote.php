@@ -1,14 +1,11 @@
 <?php
 
 require_once('src/lib/database.php');
-require_once('src/model.php');
 require_once('src/models/author.php');
 require_once('src/models/quote.php');
 
 function addQuote()
 {
-  require('templates/addQuote.php');
-
   if (isset($_POST) && !empty($_POST)) {
     extract($_POST);
 

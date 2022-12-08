@@ -8,7 +8,7 @@ class DatabaseConnection
   private function init(): void
   {
     // get database config
-    $dbConfigFile = file_get_contents('./config/config.json');
+    $dbConfigFile = file_get_contents('config/config.json');
     $dbConfig = json_decode($dbConfigFile);
 
     $this->config = get_object_vars($dbConfig->database);
