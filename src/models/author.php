@@ -1,6 +1,10 @@
 <?php
 
+namespace Application\Model\Author;
+
 require_once('src/lib/database.php');
+
+use Application\Lib\Database\DatabaseConnection;
 
 class Author
 {
@@ -89,11 +93,11 @@ class AuthorRepository
     if ($lastInsertId) {
       return $lastInsertId;
     } else {
-      throw new Exception("L'ajout de l'auteur à la base de données a échoué.");
+      throw new \Exception("L'ajout de l'auteur à la base de données a échoué.");
     }
   }
-  
-  public function getDb(): PDO
+
+  public function getDb(): \PDO
   {
     return $this->connection->getDb();
   }

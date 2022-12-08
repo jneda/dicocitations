@@ -1,8 +1,13 @@
 <?php
 
+namespace Application\Controller\ShowQuotes;
+
 require_once('src/lib/database.php');
 require_once('src/models/author.php');
 require_once('src/models/quote.php');
+
+use Application\Lib\Database\DatabaseConnection;
+use Application\Model\Quote\QuoteRepository;
 
 function buildQuery($postData)
 {

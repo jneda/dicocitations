@@ -1,8 +1,10 @@
 <?php
 
+namespace Application\Lib\Database;
+
 class DatabaseConnection
 {
-  public ?PDO $database = null;
+  public ?\PDO $database = null;
   public ?array $config = null;
 
   private function init(): void
@@ -14,7 +16,7 @@ class DatabaseConnection
     $this->config = get_object_vars($dbConfig->database);
   }
 
-  public function getDb(): PDO
+  public function getDb(): \PDO
   {
     if ($this->config === null) {
       $this->init();
@@ -22,12 +24,12 @@ class DatabaseConnection
 
     if ($this->database === null) {
       extract($this->config);
-      $this->database = new PDO(
+      $this->database = new \PDO(
         'mysql:host=' . $host . ';dbname=' . $dbname,
         $login,
         $password
       );
-      $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $this->database->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     return $this->database;
