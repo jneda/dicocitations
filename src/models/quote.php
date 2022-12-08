@@ -1,6 +1,10 @@
 <?php
 
+namespace Application\Model\Quote;
+
 require_once('src/lib/database.php');
+
+use Application\Lib\Database\DatabaseConnection;
 
 class Quote
 {
@@ -61,7 +65,7 @@ class QuoteRepository
     // add quote to database
 
     if ($quoteText === '') {
-      throw new Exception('Texte de la citation manquant.');
+      throw new \Exception('Texte de la citation manquant.');
     }
 
     $statement = $this->getDb()->prepare('
@@ -78,7 +82,7 @@ class QuoteRepository
     return $ok;
   }
 
-  public function getDb(): PDO
+  public function getDb(): \PDO
   {
     return $this->connection->getDb();
   }

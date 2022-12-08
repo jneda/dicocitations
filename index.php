@@ -4,6 +4,10 @@ require_once('src/controllers/homePage.php');
 require_once('src/controllers/showQuotes.php');
 require_once('src/controllers/addQuote.php');
 
+use function Application\Controller\AddQuote\addQuote;
+use function Application\Controller\HomePage\homePage;
+use function Application\Controller\ShowQuotes\showQuotes;
+
 try {
   if (empty($_GET)) {
     homePage();
